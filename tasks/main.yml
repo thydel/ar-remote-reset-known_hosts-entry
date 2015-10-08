@@ -1,0 +1,23 @@
+---
+
+- assert: { that: remote_node is defined }
+
+- name: ensure dig available
+  apt: { name: dnsutils }
+
+- name: get IP of remote node
+  register: dig_
+  always_run: True
+  changed_when: False
+  command: dig +short +ndots=2 +search {{ remote_node }}
+
+- assert: { that: dig_.stdout != '' }
+
+- name: Remove previous host name key from my known_hosts
+  command: ssh-keygen -R {{ remote_node }}
+
+- name: Remove previous host ip key from my known_hosts
+  command: ssh-keygen -R {{ dig_.stdout }}
+
+- name: And add hashed entry for new host keys
+  shell: ssh-keyscan -t rsa,dsa,ecdsa -H {{ remote_node }} >> ~/.ssh/known_hosts

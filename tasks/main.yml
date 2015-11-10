@@ -13,11 +13,17 @@
 
 - assert: { that: dig_.stdout != '' }
 
+- name: Create known_hosts if needed
+  command: touch ~/.ssh/known_hosts
+  args:
+    creates: ~/.ssh/known_hosts
+
 - name: Remove previous host name key from my known_hosts
   command: ssh-keygen -R {{ remote_node }}
 
 - name: Remove previous host ip key from my known_hosts
-  command: ssh-keygen -R {{ dig_.stdout }}
+  command: ssh-keygen -R {{ item }}
+  with_items: dig_.stdout_lines
 
 - name: And add hashed entry for new host keys
   shell: ssh-keyscan -t rsa,dsa,ecdsa -H {{ remote_node }} >> ~/.ssh/known_hosts

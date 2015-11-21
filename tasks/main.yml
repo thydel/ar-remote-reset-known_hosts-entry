@@ -26,4 +26,9 @@
   with_items: dig_.stdout_lines
 
 - name: And add hashed entry for new host keys
+  when: ansible_lsb.codename != 'squeeze'
   shell: ssh-keyscan -t rsa,dsa,ecdsa -H {{ remote_node }} >> ~/.ssh/known_hosts
+
+- name: And add hashed entry for new host keys
+  when: ansible_lsb.codename == 'squeeze'
+  shell: ssh-keyscan -t rsa,dsa -H {{ remote_node }} >> ~/.ssh/known_hosts

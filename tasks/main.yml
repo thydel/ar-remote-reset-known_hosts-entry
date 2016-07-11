@@ -1,6 +1,6 @@
 ---
 
-- assert: { that: remote_node is defined }
+- assert: { that: remote_node is defined and remote_node != 'unknown.nowhere' }
 
 - name: ensure dig available
   apt: { name: dnsutils }

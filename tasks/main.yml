@@ -7,7 +7,7 @@
 
 - name: get IP of remote node
   register: dig_
-  always_run: True
+  check_mode: False
   changed_when: False
   command: dig +short +ndots=2 +search {{ remote_node }}
 

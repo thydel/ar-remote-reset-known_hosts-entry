@@ -1,6 +1,6 @@
 ---
 
-- assert: { that: remote_node is defined and remote_node != 'unknown.nowhere' }
+- assert: { quiet: True, that: remote_node is defined and remote_node != 'unknown.nowhere' }
 
 - name: ensure dig available
   apt: { name: dnsutils }
@@ -11,7 +11,7 @@
   changed_when: False
   command: dig +short +ndots=2 +search {{ remote_node }}
 
-- assert: { that: dig_.stdout != '' }
+- assert: { quiet: True, that: dig_.stdout != '' }
 
 - name: Create known_hosts if needed
   command: touch ~/.ssh/known_hosts
